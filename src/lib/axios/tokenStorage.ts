@@ -22,7 +22,8 @@ class TokenStorage {
 
   getAccessToken(): string {
     const token: Token = JSON.parse(String(localStorage.getItem(tokenKey)));
-    return token.access_token;
+    if (token) return token.access_token;
+    return "";
   }
 
   getRefreshToken(): string {
