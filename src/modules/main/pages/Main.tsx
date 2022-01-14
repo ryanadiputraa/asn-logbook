@@ -14,16 +14,17 @@ export const Main: React.FC = () => {
   };
 
   useEffect(() => {
-    axios
-      .get("/api/v1/profile")
-      .then((resp) => {
-        console.log(resp.data);
-        setIsAuth(true);
-      })
-      .catch((err) => {
-        console.info("not logged in");
-        setIsAuth(false);
-      });
+    auth.isAuthenticated() ? setIsAuth(true) : setIsAuth(false);
+    // axios
+    //   .get("/api/v1/profile")
+    //   .then((resp) => {
+    //     console.log(resp.data);
+    //     setIsAuth(true);
+    //   })
+    //   .catch((err) => {
+    //     console.info("not logged in");
+    //     setIsAuth(false);
+    //   });
   }, []);
 
   return (
