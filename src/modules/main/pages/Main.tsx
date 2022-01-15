@@ -1,21 +1,70 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useForm, SubmitHandler } from "react-hook-form";
 import axios from "../../../lib/axios/axios";
 import auth from "../../auth/auth";
 
+import { ProfileForm } from "../components/ProfileForm";
 import { ModalProps } from "../../modal";
 import { MenuBar } from "../components/MenuBar";
-
+import { Box } from "@mui/material";
+import MuiAlert, { AlertProps } from "@mui/material/Alert";
+import Snackbar from "@mui/material/Snackbar";
 interface MainProps {
   setModal: React.Dispatch<React.SetStateAction<ModalProps>>;
 }
 
+export type profileData = {
+  fullname: string;
+  nip: string;
+  position: string;
+  supervisor: string;
+  supervisor_position: string;
+  city: string;
+};
+
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
+  props,
+  ref
+) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 export const Main: React.FC<MainProps> = ({ setModal }) => {
   const navigate = useNavigate();
   const [isAuth, setIsAuth] = useState(false);
+  const [isNotify, setIsNotify] = useState(false);
+  const [notifyMsg, setNotifyMsg] = useState("");
+
+  const [profileData, setProfileData] = useState<profileData>({
+    fullname: "",
+    nip: "",
+    position: "",
+    supervisor: "",
+    supervisor_position: "",
+    city: "",
+  });
 
   const handleLogout = () => {
     auth.logout(() => navigate("/login"));
+  };
+
+  const handleCloseSnackbar = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setIsNotify(false);
+  };
+
+  const { register, handleSubmit } = useForm<profileData>();
+
+  const onSaveProfile: SubmitHandler<profileData> = (data) => {
+    setNotifyMsg("Data berhasil disimpan! Silahkan isi laporan anda");
+    setIsNotify(true);
+    setProfileData(data);
   };
 
   useEffect(() => {
@@ -40,6 +89,36 @@ export const Main: React.FC<MainProps> = ({ setModal }) => {
         handleLogout={handleLogout}
         navigate={navigate}
       />
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          padding: "2vh",
+        }}
+      >
+        {profileData["nip"] === "" ? (
+          <ProfileForm
+            register={register}
+            handleSubmit={handleSubmit}
+            onSaveProfile={onSaveProfile}
+          />
+        ) : null}
+      </Box>
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        open={isNotify}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          {notifyMsg}
+        </Alert>
+      </Snackbar>
     </>
   );
 };

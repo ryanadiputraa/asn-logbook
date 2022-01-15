@@ -59,7 +59,6 @@ export const Login: React.FC<LoginProps> = ({ setModal }) => {
     if (reason === "clickaway") {
       return;
     }
-
     setIsError(false);
   };
 
