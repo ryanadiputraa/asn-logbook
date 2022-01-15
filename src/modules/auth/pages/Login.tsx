@@ -12,10 +12,16 @@ import LockIcon from "@mui/icons-material/Lock";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
 
+import { ModalProps } from "../../modal";
+
 type Inputs = {
   nip: string;
   password: string;
 };
+
+interface LoginProps {
+  setModal: React.Dispatch<React.SetStateAction<ModalProps>>;
+}
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
@@ -24,24 +30,23 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-export const Login: React.FC = () => {
+export const Login: React.FC<LoginProps> = ({ setModal }) => {
   const navigate = useNavigate();
   const [isError, setIsError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<Inputs>();
+  const { register, handleSubmit } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
+    setModal({ isOpen: true, type: "Loader" });
     auth
       .login(data)
       .then(() => {
+        setModal({ isOpen: false, type: "" });
         navigate("/");
       })
       .catch(() => {
+        setModal({ isOpen: false, type: "" });
         setErrorMsg("Gagal login! Mohon periksa kembali NIP dan Password anda");
         setIsError(true);
       });

@@ -11,7 +11,7 @@ axiosInstance.interceptors.request.use((config) => {
     if (tokenStorage.getTokenExpiredTime() < Date.now() / 1000) {
       auth
         .refreshToken({ refresh_token: tokenStorage.getRefreshToken() })
-        .then((resp) => {
+        .then(() => {
           const accessToken = tokenStorage.getAccessToken();
           if (config.headers === undefined) config.headers = {};
           config.headers["Authorization"] = `Bearer ${accessToken}`;
@@ -28,6 +28,7 @@ axiosInstance.interceptors.request.use((config) => {
       }
     }
   }
+  return config;
 });
 
 export default axiosInstance;
