@@ -108,7 +108,7 @@ export const Main: React.FC<MainProps> = ({ setModal }) => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          padding: "2vh",
+          padding: "2vh 2vh 6vh 2vh",
           gap: "2vh",
         }}
       >
@@ -119,7 +119,11 @@ export const Main: React.FC<MainProps> = ({ setModal }) => {
             onSaveProfile={onSaveProfile}
           />
         ) : null}
-        <ReportForm setReportDate={setReportDate} onAddLog={onAddLog} />
+        <ReportForm
+          setReportDate={setReportDate}
+          logs={log}
+          onAddLog={onAddLog}
+        />
       </Box>
 
       <Snackbar

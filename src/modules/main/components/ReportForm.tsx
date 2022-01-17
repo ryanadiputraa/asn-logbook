@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+import { LogList } from "./LogList";
 import { DailyLog } from "../pages/Main";
 import { Button, Paper, TextField, Typography, Stack } from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";
@@ -9,11 +10,13 @@ import Select from "@mui/material/Select";
 
 interface ReportFormProps {
   setReportDate: React.Dispatch<React.SetStateAction<string>>;
+  logs: DailyLog[];
   onAddLog: (log: DailyLog) => void;
 }
 
 export const ReportForm: React.FC<ReportFormProps> = ({
   setReportDate,
+  logs,
   onAddLog,
 }) => {
   const [day, setDay] = useState("Senin");
@@ -40,6 +43,7 @@ export const ReportForm: React.FC<ReportFormProps> = ({
           onChange={(event) => setReportDate(event.target.value)}
         />
       </div>
+      <LogList logs={logs} />
       <Paper
         elevation={4}
         sx={{
@@ -66,12 +70,12 @@ export const ReportForm: React.FC<ReportFormProps> = ({
           >
             <Typography variant="h6">Laporan</Typography>
             <FormControl sx={{ width: "50%" }}>
-              <InputLabel id="demo-simple-select-label">Age</InputLabel>
+              <InputLabel id="demo-simple-select-label">Hari</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={day}
-                label="Age"
+                label="Hari"
                 onChange={(event) => setDay(event.target.value)}
               >
                 <MenuItem value={"Senin"}>Senin</MenuItem>
@@ -90,7 +94,7 @@ export const ReportForm: React.FC<ReportFormProps> = ({
               onChange={(event) => setActivities(event.target.value)}
             />
             <Button type="submit" color="primary" variant="contained">
-              Simpan
+              Tambah
             </Button>
           </Stack>
         </form>
