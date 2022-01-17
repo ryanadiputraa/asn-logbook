@@ -5,11 +5,13 @@ import axios from "../../../lib/axios/axios";
 import auth from "../../auth/auth";
 
 import { ProfileForm } from "../components/ProfileForm";
+import { ReportForm } from "../components/ReportForm";
 import { ModalProps } from "../../modal";
 import { MenuBar } from "../components/MenuBar";
 import { Box } from "@mui/material";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
+
 interface MainProps {
   setModal: React.Dispatch<React.SetStateAction<ModalProps>>;
 }
@@ -22,6 +24,11 @@ export type profileData = {
   supervisor_position: string;
   city: string;
 };
+
+export interface DailyLog {
+  day: string;
+  activites: string;
+}
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
@@ -44,6 +51,21 @@ export const Main: React.FC<MainProps> = ({ setModal }) => {
     supervisor_position: "",
     city: "",
   });
+  const [reportDate, setReportDate] = useState<string>("");
+  const [log, setLog] = useState<DailyLog[]>([]);
+  console.log(reportDate, log);
+
+  const { register, handleSubmit } = useForm<profileData>();
+
+  const onSaveProfile: SubmitHandler<profileData> = (data) => {
+    setNotifyMsg("Data berhasil disimpan! Silahkan isi laporan anda");
+    setIsNotify(true);
+    setProfileData(data);
+  };
+
+  const onAddLog = (log: DailyLog) => {
+    setLog((currentLog) => [...currentLog, log]);
+  };
 
   const handleLogout = () => {
     auth.logout(() => navigate("/login"));
@@ -59,27 +81,19 @@ export const Main: React.FC<MainProps> = ({ setModal }) => {
     setIsNotify(false);
   };
 
-  const { register, handleSubmit } = useForm<profileData>();
-
-  const onSaveProfile: SubmitHandler<profileData> = (data) => {
-    setNotifyMsg("Data berhasil disimpan! Silahkan isi laporan anda");
-    setIsNotify(true);
-    setProfileData(data);
-  };
-
   useEffect(() => {
-    setModal({ isOpen: true, type: "Loader" });
-    axios
-      .get("/api/v1/profile")
-      .then((resp) => {
-        setModal({ isOpen: false, type: "" });
-        setIsAuth(true);
-      })
-      .catch((err) => {
-        setModal({ isOpen: false, type: "" });
-        console.error(err);
-        setIsAuth(false);
-      });
+    // setModal({ isOpen: true, type: "Loader" });
+    // axios
+    //   .get("/api/v1/profile")
+    //   .then((resp) => {
+    //     setModal({ isOpen: false, type: "" });
+    //     setIsAuth(true);
+    //   })
+    //   .catch((err) => {
+    //     setModal({ isOpen: false, type: "" });
+    //     console.error(err);
+    //     setIsAuth(false);
+    //   });
   }, []); // eslint-disable-line
 
   return (
@@ -95,6 +109,7 @@ export const Main: React.FC<MainProps> = ({ setModal }) => {
           flexDirection: "column",
           alignItems: "center",
           padding: "2vh",
+          gap: "2vh",
         }}
       >
         {profileData["nip"] === "" ? (
@@ -104,7 +119,9 @@ export const Main: React.FC<MainProps> = ({ setModal }) => {
             onSaveProfile={onSaveProfile}
           />
         ) : null}
+        <ReportForm setReportDate={setReportDate} onAddLog={onAddLog} />
       </Box>
+
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         open={isNotify}
