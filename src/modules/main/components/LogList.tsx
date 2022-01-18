@@ -6,9 +6,17 @@ import CloseIcon from "@mui/icons-material/Close";
 
 export interface LogListProps {
   logs: DailyLog[];
+  onRemoveLog: (key: number) => void;
+  currentKey: number;
+  setKey: React.Dispatch<React.SetStateAction<number>>;
 }
 
-export const LogList: React.FC<LogListProps> = ({ logs }) => {
+export const LogList: React.FC<LogListProps> = ({
+  logs,
+  onRemoveLog,
+  currentKey,
+  setKey,
+}) => {
   return (
     <Stack
       direction="column"
@@ -22,6 +30,7 @@ export const LogList: React.FC<LogListProps> = ({ logs }) => {
     >
       {logs.map((log: DailyLog) => (
         <Paper
+          key={log.key}
           elevation={5}
           sx={{
             background: "#5c6bc0",
@@ -52,7 +61,14 @@ export const LogList: React.FC<LogListProps> = ({ logs }) => {
               {log.activites}
             </Typography>
           </Box>
-          <CloseIcon color="secondary" sx={{ cursor: "pointer" }} />
+          <CloseIcon
+            color="secondary"
+            sx={{ cursor: "pointer" }}
+            onClick={() => {
+              onRemoveLog(log.key);
+              setKey(currentKey - 1);
+            }}
+          />
         </Paper>
       ))}
     </Stack>

@@ -12,22 +12,27 @@ interface ReportFormProps {
   setReportDate: React.Dispatch<React.SetStateAction<string>>;
   logs: DailyLog[];
   onAddLog: (log: DailyLog) => void;
+  onRemoveLog: (key: number) => void;
 }
 
 export const ReportForm: React.FC<ReportFormProps> = ({
   setReportDate,
   logs,
   onAddLog,
+  onRemoveLog,
 }) => {
+  const [key, setKey] = useState(1);
   const [day, setDay] = useState("Senin");
   const [activities, setActivities] = useState("");
 
   const onSubmitLogForm = (event?: React.SyntheticEvent | Event) => {
     event?.preventDefault();
     const newLog: DailyLog = {
+      key: key,
       day: day,
       activites: activities,
     };
+    setKey(key + 1);
     onAddLog(newLog);
   };
 
@@ -43,7 +48,12 @@ export const ReportForm: React.FC<ReportFormProps> = ({
           onChange={(event) => setReportDate(event.target.value)}
         />
       </div>
-      <LogList logs={logs} />
+      <LogList
+        logs={logs}
+        onRemoveLog={onRemoveLog}
+        currentKey={key}
+        setKey={setKey}
+      />
       <Paper
         elevation={4}
         sx={{
@@ -99,6 +109,9 @@ export const ReportForm: React.FC<ReportFormProps> = ({
           </Stack>
         </form>
       </Paper>
+      <Button variant="contained" color="error">
+        Cetak PDF
+      </Button>
     </>
   );
 };

@@ -26,6 +26,7 @@ export type profileData = {
 };
 
 export interface DailyLog {
+  key: number;
   day: string;
   activites: string;
 }
@@ -66,6 +67,8 @@ export const Main: React.FC<MainProps> = ({ setModal }) => {
   const onAddLog = (log: DailyLog) => {
     setLog((currentLog) => [...currentLog, log]);
   };
+
+  const onRemoveLog = (key: number) => setLog(log.filter((l) => l.key !== key));
 
   const handleLogout = () => {
     auth.logout(() => navigate("/login"));
@@ -112,7 +115,7 @@ export const Main: React.FC<MainProps> = ({ setModal }) => {
           gap: "2vh",
         }}
       >
-        {profileData["nip"] === "" ? (
+        {!profileData["nip"] ? (
           <ProfileForm
             register={register}
             handleSubmit={handleSubmit}
@@ -123,6 +126,7 @@ export const Main: React.FC<MainProps> = ({ setModal }) => {
           setReportDate={setReportDate}
           logs={log}
           onAddLog={onAddLog}
+          onRemoveLog={onRemoveLog}
         />
       </Box>
 
