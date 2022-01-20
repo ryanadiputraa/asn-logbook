@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
 // import axios from "../../../lib/axios/axios";
@@ -39,7 +39,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
 
 export const Main: React.FC<MainProps> = ({ setModal }) => {
   const navigate = useNavigate();
-  const [isAuth, setIsAuth] = useState(false);
+  const [isAuth] = useState(false);
   const [isNotify, setIsNotify] = useState(false);
   const [notifyMsg, setNotifyMsg] = useState("");
 
@@ -53,7 +53,6 @@ export const Main: React.FC<MainProps> = ({ setModal }) => {
   });
   const [reportDate, setReportDate] = useState<string>("");
   const [log, setLog] = useState<DailyLog[]>([]);
-  console.log(reportDate, log);
 
   const { register, handleSubmit } = useForm<ProfileData>();
 
