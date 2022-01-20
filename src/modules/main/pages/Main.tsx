@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
 // import axios from "../../../lib/axios/axios";
@@ -60,13 +60,24 @@ export const Main: React.FC<MainProps> = ({ setModal }) => {
     setNotifyMsg("Data berhasil disimpan! Silahkan isi laporan anda");
     setIsNotify(true);
     setProfileData(data);
+    window.localStorage.setItem("asn-logbook-profile", JSON.stringify(data));
   };
 
-  const onAddLog = (log: DailyLog) => {
-    setLog((currentLog) => [...currentLog, log]);
+  const onAddLog = (newLog: DailyLog) => {
+    window.localStorage.setItem(
+      "asn-logbook-logs",
+      JSON.stringify([...log, newLog])
+    );
+    setLog((currentLog) => [...currentLog, newLog]);
   };
 
-  const onRemoveLog = (key: number) => setLog(log.filter((l) => l.key !== key));
+  const onRemoveLog = (key: number) => {
+    window.localStorage.setItem(
+      "asn-logbook-logs",
+      JSON.stringify([log.filter((l) => l.key !== key)])
+    );
+    setLog(log.filter((l) => l.key !== key));
+  };
 
   const handleLogout = () => {
     auth.logout(() => navigate("/login"));
@@ -81,6 +92,16 @@ export const Main: React.FC<MainProps> = ({ setModal }) => {
     }
     setIsNotify(false);
   };
+
+  useEffect(() => {
+    const profileCache = window.localStorage.getItem("asn-logbook-profile");
+    const logsCache = window.localStorage.getItem("asn-logbook-logs");
+    const dateCache = window.localStorage.getItem("asn-logbook-reportdate");
+
+    if (profileCache) setProfileData(JSON.parse(profileCache));
+    if (logsCache) setLog(JSON.parse(logsCache));
+    if (dateCache) setReportDate(dateCache);
+  }, []);
 
   // useEffect(() => {
   // setModal({ isOpen: true, type: "Loader" });

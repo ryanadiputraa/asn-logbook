@@ -80,6 +80,15 @@ export const MenuBar: React.FC<Props> = ({
                     </MenuItem>,
                   ]
                 : [
+                    <MenuItem
+                      key="logout"
+                      onClick={() => {
+                        window.localStorage.removeItem("asn-logbook-profile");
+                        window.location.reload();
+                      }}
+                    >
+                      Ubah Data ASN
+                    </MenuItem>,
                     <MenuItem key="login" onClick={() => navigate("/login")}>
                       Masuk
                     </MenuItem>,
