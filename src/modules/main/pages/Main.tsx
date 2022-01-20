@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
-import axios from "../../../lib/axios/axios";
+// import axios from "../../../lib/axios/axios";
 import auth from "../../auth/auth";
 
 import { ProfileForm } from "../components/ProfileForm";
@@ -12,11 +12,7 @@ import { Box } from "@mui/material";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 
-interface MainProps {
-  setModal: React.Dispatch<React.SetStateAction<ModalProps>>;
-}
-
-export type profileData = {
+export type ProfileData = {
   fullname: string;
   nip: string;
   position: string;
@@ -29,6 +25,9 @@ export interface DailyLog {
   key: number;
   day: string;
   activites: string;
+}
+interface MainProps {
+  setModal: React.Dispatch<React.SetStateAction<ModalProps>>;
 }
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
@@ -44,7 +43,7 @@ export const Main: React.FC<MainProps> = ({ setModal }) => {
   const [isNotify, setIsNotify] = useState(false);
   const [notifyMsg, setNotifyMsg] = useState("");
 
-  const [profileData, setProfileData] = useState<profileData>({
+  const [profileData, setProfileData] = useState<ProfileData>({
     fullname: "",
     nip: "",
     position: "",
@@ -56,9 +55,9 @@ export const Main: React.FC<MainProps> = ({ setModal }) => {
   const [log, setLog] = useState<DailyLog[]>([]);
   console.log(reportDate, log);
 
-  const { register, handleSubmit } = useForm<profileData>();
+  const { register, handleSubmit } = useForm<ProfileData>();
 
-  const onSaveProfile: SubmitHandler<profileData> = (data) => {
+  const onSaveProfile: SubmitHandler<ProfileData> = (data) => {
     setNotifyMsg("Data berhasil disimpan! Silahkan isi laporan anda");
     setIsNotify(true);
     setProfileData(data);
@@ -84,20 +83,20 @@ export const Main: React.FC<MainProps> = ({ setModal }) => {
     setIsNotify(false);
   };
 
-  useEffect(() => {
-    // setModal({ isOpen: true, type: "Loader" });
-    // axios
-    //   .get("/api/v1/profile")
-    //   .then((resp) => {
-    //     setModal({ isOpen: false, type: "" });
-    //     setIsAuth(true);
-    //   })
-    //   .catch((err) => {
-    //     setModal({ isOpen: false, type: "" });
-    //     console.error(err);
-    //     setIsAuth(false);
-    //   });
-  }, []); // eslint-disable-line
+  // useEffect(() => {
+  // setModal({ isOpen: true, type: "Loader" });
+  // axios
+  //   .get("/api/v1/profile")
+  //   .then((resp) => {
+  //     setModal({ isOpen: false, type: "" });
+  //     setIsAuth(true);
+  //   })
+  //   .catch((err) => {
+  //     setModal({ isOpen: false, type: "" });
+  //     console.error(err);
+  //     setIsAuth(false);
+  //   });
+  // }, []); // eslint-disable-line
 
   return (
     <>
@@ -127,6 +126,11 @@ export const Main: React.FC<MainProps> = ({ setModal }) => {
           logs={log}
           onAddLog={onAddLog}
           onRemoveLog={onRemoveLog}
+          profileData={profileData}
+          reportDate={reportDate}
+          setIsNotify={setIsNotify}
+          setNotifyMsg={setNotifyMsg}
+          setModal={setModal}
         />
       </Box>
 

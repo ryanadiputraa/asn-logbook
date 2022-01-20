@@ -4,14 +4,14 @@ import {
   UseFormHandleSubmit,
   SubmitHandler,
 } from "react-hook-form";
-import { profileData } from "../pages/Main";
+import { ProfileData } from "../pages/Main";
 
 import { Button, Paper, Stack, Typography, TextField } from "@mui/material";
 
 interface ProfileFormInterface {
-  register: UseFormRegister<profileData>;
-  handleSubmit: UseFormHandleSubmit<profileData>;
-  onSaveProfile: SubmitHandler<profileData>;
+  register: UseFormRegister<ProfileData>;
+  handleSubmit: UseFormHandleSubmit<ProfileData>;
+  onSaveProfile: SubmitHandler<ProfileData>;
 }
 
 export const ProfileForm: React.FC<ProfileFormInterface> = ({
